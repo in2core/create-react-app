@@ -1,6 +1,6 @@
 {
   "name": "@in2core/react-scripts",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Configuration and scripts for Create React App for in2core company purposes.",
   "repository": "in2core/create-react-app",
   "license": "BSD-3-Clause",
@@ -43,6 +43,7 @@
     "eslint-plugin-jsx-a11y": "4.0.0",
     "eslint-plugin-react": "6.4.1",
     "extract-text-webpack-plugin": "2.1.0",
+    "favicons-webpack-plugin": "0.0.7",
     "file-loader": "0.10.1",
     "fs-extra": "0.30.0",
     "html-webpack-plugin": "2.28.0",
