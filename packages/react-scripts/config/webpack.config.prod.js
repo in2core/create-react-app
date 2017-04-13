@@ -275,8 +275,8 @@ module.exports = {
     }),
     // It will generate a service worker file to cache external project dependencies.
     new SWPrecacheWebpackPlugin({
-      cacheId: 'qtake-cloud-service-worker',
-      filename: 'qt-service-worker.js',
+      cacheId: 'service-worker',
+      filename: 'service-worker.js',
       maximumFileSizeToCacheInBytes: 8388608,
       minify: true,
       // Ensure all static, local assets are cached.
