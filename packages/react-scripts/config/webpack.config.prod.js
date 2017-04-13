@@ -16,6 +16,7 @@ const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin');
+const SWPrecacheWebpackPlugin = require('sw-precache-webpack-plugin');
 const paths = require('./paths');
 const getClientEnvironment = require('./env');
 
@@ -271,6 +272,29 @@ module.exports = {
     // Note: this won't work without ExtractTextPlugin.extract(..) in `loaders`.
     new ExtractTextPlugin({
       filename: cssFilename,
+    }),
+    // It will generate a service worker file to cache external project dependencies.
+    new SWPrecacheWebpackPlugin({
+      cacheId: 'qtake-cloud-service-worker',
+      filename: 'qt-service-worker.js',
+      maximumFileSizeToCacheInBytes: 8388608,
+      minify: true,
+      // Ensure all static, local assets are cached.
+      staticFileGlobs: [
+        `${paths.appBuild}/**/*.{js,html,css,txt,png,jpg,gif,svg,eot,ttf,woff,woff2}`,
+      ],
+      stripPrefix: `${paths.appBuild}/`,
+      navigateFallback: paths.appHtml,
+      verbose: true,
+      runtimeCaching: [
+        {
+          urlPattern: /\/api\/widget\/load(.*)/,
+          handler: 'networkFirst',
+          options: {
+            debug: true,
+          },
+        },
+      ],
     }),
     // Generate a manifest file which contains a mapping of all asset filenames
     // to their corresponding output file so that tools can pick it up without
