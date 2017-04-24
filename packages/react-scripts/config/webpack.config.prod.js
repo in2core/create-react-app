@@ -199,6 +199,8 @@ module.exports = {
                   options: {
                     modules: true,
                     importLoaders: 1,
+                    minimize: true,
+                    sourceMap: true,
                   },
                 },
                 {
