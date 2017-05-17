@@ -279,6 +279,11 @@ module.exports = {
     }),
     // It will generate a service worker file to cache external project dependencies.
     new SWPrecacheWebpackPlugin({
+      // By default, a cache-busting query parameter is appended to requests
+      // used to populate the caches, to ensure the responses are fresh.
+      // If a URL is already hashed by Webpack, then there is no concern
+      // about it being stale, and the cache-busting can be skipped.
+      dontCacheBustUrlsMatching: /\.\w{8}\./,
       cacheId: 'service-worker',
       filename: 'service-worker.js',
       maximumFileSizeToCacheInBytes: 8388608,
@@ -287,9 +292,9 @@ module.exports = {
       staticFileGlobs: [
         `${paths.appBuild}/**/*.{js,html,css,txt,png,jpg,gif,svg,eot,ttf,woff,woff2}`,
       ],
+      staticFileGlobsIgnorePatterns: [/\.map$/, /asset-manifest\.json$/],
       stripPrefix: `${paths.appBuild}/`,
       navigateFallback: paths.appHtml,
-      verbose: true,
       runtimeCaching: [
         {
           urlPattern: /\/api\/widget\/load(.*)/,
