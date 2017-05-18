@@ -23,7 +23,7 @@ process.on('unhandledRejection', err => {
 // Ensure environment variables are read.
 require('../config/env');
 
-const path = require('path');
+// const path = require('path');
 const chalk = require('chalk');
 const fs = require('fs-extra');
 const webpack = require('webpack');
@@ -31,12 +31,12 @@ const config = require('../config/webpack.config.prod');
 const paths = require('../config/paths');
 const checkRequiredFiles = require('react-dev-utils/checkRequiredFiles');
 const formatWebpackMessages = require('react-dev-utils/formatWebpackMessages');
-const printHostingInstructions = require('react-dev-utils/printHostingInstructions');
+// const printHostingInstructions = require('react-dev-utils/printHostingInstructions');
 const FileSizeReporter = require('react-dev-utils/FileSizeReporter');
 
 const measureFileSizesBeforeBuild = FileSizeReporter.measureFileSizesBeforeBuild;
 const printFileSizesAfterBuild = FileSizeReporter.printFileSizesAfterBuild;
-const useYarn = fs.existsSync(paths.yarnLockFile);
+// const useYarn = fs.existsSync(paths.yarnLockFile);
 
 // Warn and crash if required files are missing
 if (!checkRequiredFiles([paths.appHtml, paths.appIndexJs])) {
@@ -65,17 +65,17 @@ measureFileSizesBeforeBuild(paths.appBuild)
       printFileSizesAfterBuild(stats, previousFileSizes);
       console.log();
 
-      const appPackage = require(paths.appPackageJson);
-      const publicUrl = paths.publicUrl;
-      const publicPath = config.output.publicPath;
-      const buildFolder = path.relative(process.cwd(), paths.appBuild);
-      printHostingInstructions(
-        appPackage,
-        publicUrl,
-        publicPath,
-        buildFolder,
-        useYarn
-      );
+      // const appPackage = require(paths.appPackageJson);
+      // const publicUrl = paths.publicUrl;
+      // const publicPath = config.output.publicPath;
+      // const buildFolder = path.relative(process.cwd(), paths.appBuild);
+      // printHostingInstructions(
+      //   appPackage,
+      //   publicUrl,
+      //   publicPath,
+      //   buildFolder,
+      //   useYarn
+      // );
     },
     err => {
       console.log(chalk.red('Failed to compile.'));
