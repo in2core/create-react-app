@@ -290,34 +290,6 @@ module.exports = {
     new ExtractTextPlugin({
       filename: cssFilename,
     }),
-    // It will generate a service worker file to cache external project dependencies.
-    new SWPrecacheWebpackPlugin({
-      // By default, a cache-busting query parameter is appended to requests
-      // used to populate the caches, to ensure the responses are fresh.
-      // If a URL is already hashed by Webpack, then there is no concern
-      // about it being stale, and the cache-busting can be skipped.
-      dontCacheBustUrlsMatching: /\.\w{8}\./,
-      cacheId: 'service-worker',
-      filename: 'service-worker.js',
-      maximumFileSizeToCacheInBytes: 8388608,
-      minify: true,
-      // Ensure all static, local assets are cached.
-      staticFileGlobs: [
-        `${paths.appBuild}/**/*.{js,html,css,txt,png,jpg,gif,svg,eot,ttf,woff,woff2}`,
-      ],
-      staticFileGlobsIgnorePatterns: [/\.map$/, /asset-manifest\.json$/],
-      stripPrefix: `${paths.appBuild}/`,
-      navigateFallback: paths.appHtml,
-      runtimeCaching: [
-        {
-          urlPattern: /\/api\/widget\/load(.*)/,
-          handler: 'networkFirst',
-          options: {
-            debug: true,
-          },
-        },
-      ],
-    }),
     // Generate a manifest file which contains a mapping of all asset filenames
     // to their corresponding output file so that tools can pick it up without
     // having to parse `index.html`.
@@ -332,7 +304,7 @@ module.exports = {
       // If a URL is already hashed by Webpack, then there is no concern
       // about it being stale, and the cache-busting can be skipped.
       dontCacheBustUrlsMatching: /\.\w{8}\./,
-      filename: 'service-worker.js',
+      filepath: paths.appBuild + '/static/js/service-worker.js',
       logger(message) {
         if (message.indexOf('Total precache size is') === 0) {
           // This message occurs for every build and is a bit too noisy.
