@@ -1,9 +1,20 @@
+/**
+ * Copyright (c) 2015-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ */
+
 /* @flow */
 const black = '#293238',
   darkGray = '#878e91',
   red = '#ce1126',
+  redTransparent = 'rgba(206, 17, 38, 0.05)',
   lightRed = '#fccfcf',
   yellow = '#fbf5b4',
+  yellowTransparent = 'rgba(251, 245, 180, 0.3)',
   white = '#ffffff';
 
 const iframeStyle = {
@@ -13,7 +24,7 @@ const iframeStyle = {
   width: '100%',
   height: '100%',
   border: 'none',
-  'z-index': 1337,
+  'z-index': 2147483647 - 1, // below the compile error overlay
 };
 
 const overlayStyle = {
@@ -35,7 +46,7 @@ const containerStyle = {
   'overflow-y': 'auto',
   padding: '0.5rem',
   'box-sizing': 'border-box',
-  'text-align': 'start',
+  'text-align': 'left',
   'font-family': 'Consolas, Menlo, monospace',
   'font-size': '11px',
   'white-space': 'pre-wrap',
@@ -64,22 +75,24 @@ const closeButtonStyle = {
   top: 0,
 };
 
-const additionalStyle = {};
+const additionalChildStyle = {
+  'margin-bottom': '0.5rem',
+};
 
 const headerStyle = {
   'font-size': '2em',
   'font-family': 'sans-serif',
   color: red,
   'white-space': 'pre-wrap',
-  margin: '0.75rem 2rem 0 0', // Prevent overlap with close button
+  // Top bottom margin spaces header
+  // Right margin revents overlap with close button
+  margin: '0 2rem 0.75rem 0',
   flex: '0 0 auto',
-  'max-height': '35%',
+  'max-height': '50%',
   overflow: 'auto',
 };
 
-const functionNameStyle = {
-  'margin-top': '1em',
-};
+const functionNameStyle = {};
 
 const linkStyle = {
   'font-size': '0.9em',
@@ -108,12 +121,19 @@ const secondaryErrorStyle = {
   'background-color': yellow,
 };
 
-const omittedFramesStyle = {
+const omittedFramesCollapsedStyle = {
   color: black,
   cursor: 'pointer',
+  'margin-bottom': '1.5em',
 };
 
-const preStyle = {
+const omittedFramesExpandedStyle = {
+  color: black,
+  cursor: 'pointer',
+  'margin-bottom': '0.6em',
+};
+
+const _preStyle = {
   display: 'block',
   padding: '0.5em',
   'margin-top': '0.5em',
@@ -121,8 +141,13 @@ const preStyle = {
   'overflow-x': 'auto',
   'white-space': 'pre-wrap',
   'border-radius': '0.25rem',
-  'background-color': 'rgba(206, 17, 38, .05)',
 };
+const primaryPreStyle = Object.assign({}, _preStyle, {
+  'background-color': redTransparent,
+});
+const secondaryPreStyle = Object.assign({}, _preStyle, {
+  'background-color': yellowTransparent,
+});
 
 const toggleStyle = {
   'margin-bottom': '1.5em',
@@ -143,11 +168,10 @@ const groupStyle = {
 };
 
 const _groupElemStyle = {
-  'background-color': 'inherit',
-  'border-color': '#ddd',
-  'border-width': '1px',
+  'background-color': redTransparent,
+  color: red,
+  border: 'none',
   'border-radius': '4px',
-  'border-style': 'solid',
   padding: '3px 6px',
   cursor: 'pointer',
 };
@@ -155,13 +179,12 @@ const _groupElemStyle = {
 const groupElemLeft = Object.assign({}, _groupElemStyle, {
   'border-top-right-radius': '0px',
   'border-bottom-right-radius': '0px',
-  'margin-right': '0px',
+  'margin-right': '1px',
 });
 
 const groupElemRight = Object.assign({}, _groupElemStyle, {
   'border-top-left-radius': '0px',
   'border-bottom-left-radius': '0px',
-  'margin-right': '-1px',
 });
 
 const footerStyle = {
@@ -178,7 +201,7 @@ export {
   hintsStyle,
   hintStyle,
   closeButtonStyle,
-  additionalStyle,
+  additionalChildStyle,
   headerStyle,
   functionNameStyle,
   linkStyle,
@@ -186,9 +209,11 @@ export {
   traceStyle,
   depStyle,
   primaryErrorStyle,
+  primaryPreStyle,
   secondaryErrorStyle,
-  omittedFramesStyle,
-  preStyle,
+  secondaryPreStyle,
+  omittedFramesCollapsedStyle,
+  omittedFramesExpandedStyle,
   toggleStyle,
   codeStyle,
   hiddenStyle,
