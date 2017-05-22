@@ -38,7 +38,7 @@ function createOverlayIframe(onIframeLoad) {
   iframe.style.width = '100vw';
   iframe.style.height = '100vh';
   iframe.style.border = 'none';
-  iframe.style.zIndex = 9999999999;
+  iframe.style.zIndex = 2147483647;
   iframe.onload = onIframeLoad;
   return iframe;
 }
@@ -67,7 +67,7 @@ function addOverlayDivTo(iframe) {
   div.style.overflowY = 'auto';
   div.style.padding = '0.5rem';
   div.style.boxSizing = 'border-box';
-  div.style.textAlign = 'start';
+  div.style.textAlign = 'left';
   div.style.fontFamily = 'Consolas, Menlo, monospace';
   div.style.fontSize = '11px';
   div.style.whiteSpace = 'pre-wrap';
@@ -85,7 +85,7 @@ function overlayHeaderStyle() {
     'font-family: sans-serif;' +
     'color: rgb(206, 17, 38);' +
     'white-space: pre-wrap;' +
-    'margin: 0.75rem 2rem 0px 0px;' +
+    'margin: 0 2rem 0.75rem 0px;' +
     'flex: 0 0 auto;' +
     'max-height: 35%;' +
     'overflow: auto;';
@@ -129,9 +129,9 @@ function showErrorOverlay(message) {
     // TODO: unify this with our runtime overlay
     overlayDiv.innerHTML = '<div style="' +
       overlayHeaderStyle() +
-      '">Failed to compile</div><br><br>' +
+      '">Failed to compile</div>' +
       '<pre style="' +
-      'display: block; padding: 0.5em; margin-top: 0.5em; ' +
+      'display: block; padding: 0.5em; margin-top: 0; ' +
       'margin-bottom: 0.5em; overflow-x: auto; white-space: pre-wrap; ' +
       'border-radius: 0.25rem; background-color: rgba(206, 17, 38, 0.05)">' +
       '<code style="font-family: Consolas, Menlo, monospace;">' +
@@ -172,9 +172,11 @@ var connection = new SockJS(
 // to avoid spamming the console. Disconnect usually happens
 // when developer stops the server.
 connection.onclose = function() {
-  console.info(
-    'The development server has disconnected.\nRefresh the page if necessary.'
-  );
+  if (typeof console !== 'undefined' && typeof console.info === 'function') {
+    console.info(
+      'The development server has disconnected.\nRefresh the page if necessary.'
+    );
+  }
 };
 
 // Remember some state related to hot module replacement.
@@ -184,15 +186,16 @@ var hasCompileErrors = false;
 
 function clearOutdatedErrors() {
   // Clean up outdated compile errors, if any.
-  if (hasCompileErrors && typeof console.clear === 'function') {
-    console.clear();
+  if (typeof console !== 'undefined' && typeof console.clear === 'function') {
+    if (hasCompileErrors) {
+      console.clear();
+    }
   }
 }
 
 // Successful compilation.
 function handleSuccess() {
   clearOutdatedErrors();
-  destroyErrorOverlay();
 
   var isHotUpdate = !isFirstCompilation;
   isFirstCompilation = false;
@@ -200,14 +203,17 @@ function handleSuccess() {
 
   // Attempt to apply hot updates or reload.
   if (isHotUpdate) {
-    tryApplyUpdates();
+    tryApplyUpdates(function onHotUpdateSuccess() {
+      // Only destroy it when we're sure it's a hot update.
+      // Otherwise it would flicker right before the reload.
+      destroyErrorOverlay();
+    });
   }
 }
 
 // Compilation with warnings (e.g. ESLint).
 function handleWarnings(warnings) {
   clearOutdatedErrors();
-  destroyErrorOverlay();
 
   var isHotUpdate = !isFirstCompilation;
   isFirstCompilation = false;
@@ -220,8 +226,10 @@ function handleWarnings(warnings) {
       errors: [],
     });
 
-    for (var i = 0; i < formatted.warnings.length; i++) {
-      console.warn(stripAnsi(formatted.warnings[i]));
+    if (typeof console !== 'undefined' && typeof console.warn === 'function') {
+      for (var i = 0; i < formatted.warnings.length; i++) {
+        console.warn(stripAnsi(formatted.warnings[i]));
+      }
     }
   }
 
@@ -231,6 +239,9 @@ function handleWarnings(warnings) {
       // Only print warnings if we aren't refreshing the page.
       // Otherwise they'll disappear right away anyway.
       printWarnings();
+      // Only destroy it when we're sure it's a hot update.
+      // Otherwise it would flicker right before the reload.
+      destroyErrorOverlay();
     });
   } else {
     // Print initial warnings immediately.
@@ -255,8 +266,10 @@ function handleErrors(errors) {
   showErrorOverlay(formatted.errors[0]);
 
   // Also log them to the console.
-  for (var i = 0; i < formatted.errors.length; i++) {
-    console.error(stripAnsi(formatted.errors[i]));
+  if (typeof console !== 'undefined' && typeof console.error === 'function') {
+    for (var i = 0; i < formatted.errors.length; i++) {
+      console.error(stripAnsi(formatted.errors[i]));
+    }
   }
 
   // Do not attempt to reload now.

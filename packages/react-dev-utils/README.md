@@ -236,6 +236,14 @@ var getProcessForPort = require('react-dev-utils/getProcessForPort');
 getProcessForPort(3000);
 ```
 
+#### `launchEditor(fileName: string, lineNumber: number): void`
+
+On macOS, tries to find a known running editor process and opens the file in it. It can also be explicitly configured by `REACT_EDITOR`, `VISUAL`, or `EDITOR` environment variables. For example, you can put `REACT_EDITOR=atom` in your `.env.local` file, and Create React App will respect that.
+
+#### `noopServiceWorkerMiddleware(): ExpressMiddleware`
+
+Returns Express middleware that serves a `/service-worker.js` that resets any previously set service worker configuration. Useful for development.
+
 #### `openBrowser(url: string): boolean`
 
 Attempts to open the browser with a given URL.<br>
@@ -265,7 +273,25 @@ const publicPath = config.output.publicPath;
 printHostingInstructions(appPackage, publicUrl, publicPath, 'build', true);
 ```
 
-#### `webpackHotDevClient.js`
+#### `WebpackDevServerUtils`
+
+##### `choosePort(host: string, defaultPort: number): Promise<number | null>`
+
+Returns a Promise resolving to either `defaultPort` or next available port if the user confirms it is okay to do. If the port is taken and the user has refused to use another port, or if the terminal is not interactive and can’t present user with the choice, resolves to `null`.
+
+##### `createCompiler(webpack: Function, config: Object, appName: string, urls: Object, useYarn: boolean): WebpackCompiler`
+
+Creates a Webpack compiler instance for WebpackDevServer with built-in helpful messages. Takes the `require('webpack')` entry point as the first argument. To provide the `urls` argument, use `prepareUrls()` described below.
+
+##### `prepareProxy(proxySetting: string): Object`
+
+Creates a WebpackDevServer `proxy` configuration object from the `proxy` setting in `package.json`.
+
+##### `prepareUrls(protocol: string, host: string, port: number): Object`
+
+Returns an object with local and remote URLs for the development server. Pass this object to `createCompiler()` described above.
+
+#### `webpackHotDevClient`
 
 This is an alternative client for [WebpackDevServer](https://github.com/webpack/webpack-dev-server) that shows a syntax error overlay.
 
