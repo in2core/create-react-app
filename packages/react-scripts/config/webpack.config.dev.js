@@ -246,6 +246,18 @@ module.exports = {
       prefix: 'static/media/favicons-[hash:8]/',
       persistentCache: true,
       inject: true,
+      icons: {
+        android: true,
+        appleIcon: true,
+        appleStartup: true,
+        coast: false,
+        favicons: false,
+        firefox: false,
+        opengraph: false,
+        twitter: false,
+        yandex: false,
+        windows: true,
+      },
     }),
     // Makes some environment variables available to the JS code, for example:
     // if (process.env.NODE_ENV === 'development') { ... }. See `./env.js`.
