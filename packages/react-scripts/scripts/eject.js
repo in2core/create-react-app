@@ -169,6 +169,9 @@ inquirer
     Object.keys(appPackage.scripts).forEach(key => {
       Object.keys(ownPackage.bin).forEach(binKey => {
         const regex = new RegExp(binKey + ' (\\w+)', 'g');
+        if (!regex.test(appPackage.scripts[key])) {
+          return;
+        }
         appPackage.scripts[key] = appPackage.scripts[key].replace(
           regex,
           'node scripts/$1.js'
@@ -217,11 +220,26 @@ inquirer
     }
 
     if (fs.existsSync(paths.yarnLockFile)) {
-      console.log(cyan('Running yarn...'));
-      spawnSync('yarnpkg', [], { stdio: 'inherit' });
+      // TODO: this is disabled for three reasons.
+      //
+      // 1. It produces garbage warnings on Windows on some systems:
+      //    https://github.com/facebookincubator/create-react-app/issues/2030
+      //
+      // 2. For the above reason, it breaks Windows CI:
+      //    https://github.com/facebookincubator/create-react-app/issues/2624
+      //
+      // 3. It is wrong anyway: re-running yarn will respect the lockfile
+      //    rather than package.json we just updated. Instead we should have
+      //    updated the lockfile. So we might as well not do it while it's broken.
+      //    https://github.com/facebookincubator/create-react-app/issues/2627
+      //
+      // console.log(cyan('Running yarn...'));
+      // spawnSync('yarnpkg', [], { stdio: 'inherit' });
     } else {
       console.log(cyan('Running npm install...'));
-      spawnSync('npm', ['install'], { stdio: 'inherit' });
+      spawnSync('npm', ['install', '--loglevel', 'error'], {
+        stdio: 'inherit',
+      });
     }
     console.log(green('Ejected successfully!'));
     console.log();
