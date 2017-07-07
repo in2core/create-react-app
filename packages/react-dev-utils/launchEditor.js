@@ -55,9 +55,6 @@ function addWorkspaceToArgumentsIfExists(args, workspace) {
 function getArgumentsForLineNumber(editor, fileName, lineNumber, workspace) {
   const editorBasename = path.basename(editor).replace(/\.(exe|cmd|bat)$/i, '');
   switch (editorBasename) {
-    case 'vim':
-    case 'mvim':
-      return [fileName, '+' + lineNumber];
     case 'atom':
     case 'Atom':
     case 'Atom Beta':
@@ -71,6 +68,8 @@ function getArgumentsForLineNumber(editor, fileName, lineNumber, workspace) {
       return [fileName + ':' + lineNumber];
     case 'notepad++':
       return ['-n' + lineNumber, fileName];
+    case 'vim':
+    case 'mvim':
     case 'joe':
     case 'emacs':
     case 'emacsclient':
@@ -89,6 +88,8 @@ function getArgumentsForLineNumber(editor, fileName, lineNumber, workspace) {
     case 'webstorm64':
     case 'phpstorm':
     case 'phpstorm64':
+    case 'pycharm':
+    case 'pycharm64':
       return addWorkspaceToArgumentsIfExists(
         ['--line', lineNumber, fileName],
         workspace
