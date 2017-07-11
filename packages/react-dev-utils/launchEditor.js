@@ -35,6 +35,14 @@ const COMMON_EDITORS_OSX = {
   '/Applications/Sublime Text.app/Contents/MacOS/Sublime Text': '/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl',
   '/Applications/Sublime Text 2.app/Contents/MacOS/Sublime Text 2': '/Applications/Sublime Text 2.app/Contents/SharedSupport/bin/subl',
   '/Applications/Visual Studio Code.app/Contents/MacOS/Electron': 'code',
+  '/Applications/AppCode.app/Contents/MacOS/appcode': '/Applications/AppCode.app/Contents/MacOS/appcode',
+  '/Applications/CLion.app/Contents/MacOS/clion': '/Applications/CLion.app/Contents/MacOS/clion',
+  '/Applications/IntelliJ IDEA.app/Contents/MacOS/idea': '/Applications/IntelliJ IDEA.app/Contents/MacOS/idea',
+  '/Applications/PhpStorm.app/Contents/MacOS/phpstorm': '/Applications/PhpStorm.app/Contents/MacOS/phpstorm',
+  '/Applications/PyCharm.app/Contents/MacOS/pycharm': '/Applications/PyCharm.app/Contents/MacOS/pycharm',
+  '/Applications/PyCharm CE.app/Contents/MacOS/pycharm': '/Applications/PyCharm CE.app/Contents/MacOS/pycharm',
+  '/Applications/RubyMine.app/Contents/MacOS/rubymine': '/Applications/RubyMine.app/Contents/MacOS/rubymine',
+  '/Applications/WebStorm.app/Contents/MacOS/webstorm': '/Applications/WebStorm.app/Contents/MacOS/webstorm',
 };
 
 const COMMON_EDITORS_WIN = [
@@ -43,6 +51,18 @@ const COMMON_EDITORS_WIN = [
   'atom.exe',
   'sublime_text.exe',
   'notepad++.exe',
+  'clion.exe',
+  'clion64.exe',
+  'idea.exe',
+  'idea64.exe',
+  'phpstorm.exe',
+  'phpstorm64.exe',
+  'pycharm.exe',
+  'pycharm64.exe',
+  'rubymine.exe',
+  'rubymine64.exe',
+  'webstorm.exe',
+  'webstorm64.exe',
 ];
 
 function addWorkspaceToArgumentsIfExists(args, workspace) {
@@ -62,9 +82,7 @@ function getArgumentsForLineNumber(editor, fileName, lineNumber, workspace) {
     case 'sublime':
     case 'sublime_text':
     case 'wstorm':
-    case 'appcode':
     case 'charm':
-    case 'idea':
       return [fileName + ':' + lineNumber];
     case 'notepad++':
       return ['-n' + lineNumber, fileName];
@@ -84,12 +102,19 @@ function getArgumentsForLineNumber(editor, fileName, lineNumber, workspace) {
         ['-g', fileName + ':' + lineNumber],
         workspace
       );
-    case 'webstorm':
-    case 'webstorm64':
+    case 'appcode':
+    case 'clion':
+    case 'clion64':
+    case 'idea':
+    case 'idea64':
     case 'phpstorm':
     case 'phpstorm64':
     case 'pycharm':
     case 'pycharm64':
+    case 'rubymine':
+    case 'rubymine64':
+    case 'webstorm':
+    case 'webstorm64':
       return addWorkspaceToArgumentsIfExists(
         ['--line', lineNumber, fileName],
         workspace
