@@ -42,9 +42,7 @@ export default class extends Component {
     return (
       <div id="feature-computed-properties">
         {this.state.users.map(user => (
-          <div key={user.id}>
-            {user.user_name}
-          </div>
+          <div key={user.id}>{user.user_name}</div>
         ))}
       </div>
     );
