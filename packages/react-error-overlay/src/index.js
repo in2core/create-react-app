@@ -64,7 +64,7 @@ export function startReportingRuntimeErrors(options: RuntimeReportingOptions) {
     );
   }
   currentRuntimeErrorOptions = options;
-  listenToRuntimeErrors(
+  stopListeningToRuntimeErrors = listenToRuntimeErrors(
     errorRecord => {
       try {
         if (typeof options.onError === 'function') {
