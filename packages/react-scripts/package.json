@@ -1,6 +1,6 @@
 {
   "name": "@in2core/react-scripts",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "description": "Configuration and scripts for Create React App for in2core company purposes.",
   "repository": "in2core/create-react-app",
   "license": "MIT",
